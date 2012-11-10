@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct customerlist{
@@ -11,6 +12,20 @@ struct customerlist{
 	struct customerlist* next;
 };
 
+void Push(struct customerlist** head_reference,int i, int x, int y, int q, int e, int l, int d){
+	struct customerlist* newcustomer = malloc(sizeof(struct customerlist));
+	newcustomer->i = i;
+	newcustomer->x = x;
+	newcustomer->y = y;
+	newcustomer->q = q;
+	newcustomer->e = e;
+	newcustomer->l = l;
+	newcustomer->d = d;
+
+	newcustomer->next = *head_reference;
+	*head_reference = newcustomer;
+}
+
 int main(int argc, char** argv) {
 	if(argc<3) {
 		printf("Usage: %s input_file output_file\n",argv[0] );
@@ -20,6 +35,7 @@ int main(int argc, char** argv) {
 	int Q=0; //vehicle capacity
 	int x_0,y_0,e_0,l_0; //data for depot
 	int i=0,x=0,y=0,q=0,e=0,l=0,d=0; //data of current imput i-number; x,y-coordinates; q-demand; e-ready; l-due date; d-service time;
+	struct customerlist *head=NULL; //pointers
 
 	/** reading input file **/
 	FILE *input_file=NULL;
@@ -39,7 +55,9 @@ int main(int argc, char** argv) {
 	while(!feof(input_file)){
 		fscanf(input_file," %d %d %d %d %d %d %d\n",&i,&x,&y,&q,&e,&l,&d);
 		printf("read current : i %d, x %d, y %d, DEMAND %d,  servStart %d, servEND %d, servTIME %d\n",i,x,y,q,e,l,d);
+		Push(&head,i,x,y,q,e,l,d);
 	}
+
 	printf("CVRPTW - done\n");
 	fclose(input_file);
 	return 0;
