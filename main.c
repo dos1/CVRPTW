@@ -25,6 +25,15 @@ void Push(struct customerlist** head_reference,int i, int x, int y, int q, int e
 	newcustomer->next = *head_reference;
 	*head_reference = newcustomer;
 }
+void FreeList(struct customerlist** head_reference){
+
+	struct customerlist* pom;
+	while(*head_reference!=NULL){
+		pom=*head_reference;
+		*head_reference=(*head_reference)->next;
+		free(pom);
+	}
+}
 
 int main(int argc, char** argv) {
 	if(argc<3) {
@@ -47,9 +56,7 @@ int main(int argc, char** argv) {
 	}
 	fscanf(input_file,"%*d %d",&Q); //whole while above can be done with fscanf in simmilar fasion to the one down
 	printf("Q %d\n",Q);
-	//while((fgets(buf,1024,input_file)!=NULL) && (strcmp(buf,"CUST NO. XCOORD. YCOORD. DEMAND READY TIME DUE DATE SERVICE TIME\n")!=0) ){
-	//	printf("read %s\n",buf);
-	//}
+
 	fscanf(input_file," CUSTOMER\nCUST NO. XCOORD. YCOORD. DEMAND READY TIME DUE DATE SERVICE TIME 0 %d %d %*d %d %d %*d\n",&x_0,&y_0,&e_0,&l_0);
 	printf("read for depot : x %d, y %d,  servStart %d, servEND %d\n",x_0,y_0,e_0,l_0);
 	while(!feof(input_file)){
@@ -57,8 +64,9 @@ int main(int argc, char** argv) {
 		printf("read current : i %d, x %d, y %d, DEMAND %d,  servStart %d, servEND %d, servTIME %d\n",i,x,y,q,e,l,d);
 		Push(&head,i,x,y,q,e,l,d);
 	}
-
-	printf("CVRPTW - done\n");
 	fclose(input_file);
+	printf("CVRPTW - done\n");
+
+	FreeList(&head);
 	return 0;
 }
