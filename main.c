@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 
+struct customerlist{
+	int i; 		//number
+	int x,y; 	//coordinates
+	int q;		//demand
+	int e;		//ready time
+	int l;		//due date
+	int d;		//service time
+	struct customerlist* next;
+};
+
 int main(int argc, char** argv) {
 	if(argc<3) {
 		printf("Usage: %s input_file output_file\n",argv[0] );
@@ -9,7 +19,7 @@ int main(int argc, char** argv) {
 
 	int Q=0; //vehicle capacity
 	int x_0,y_0,e_0,l_0; //data for depot
-	int i,x,y,q,e,l,d; //data of current imput
+	int i=0,x=0,y=0,q=0,e=0,l=0,d=0; //data of current imput i-number; x,y-coordinates; q-demand; e-ready; l-due date; d-service time;
 
 	/** reading input file **/
 	FILE *input_file=NULL;
@@ -26,7 +36,10 @@ int main(int argc, char** argv) {
 	//}
 	fscanf(input_file," CUSTOMER\nCUST NO. XCOORD. YCOORD. DEMAND READY TIME DUE DATE SERVICE TIME 0 %d %d %*d %d %d %*d\n",&x_0,&y_0,&e_0,&l_0);
 	printf("read for depot : x %d, y %d,  servStart %d, servEND %d\n",x_0,y_0,e_0,l_0);
-	
+	while(!feof(input_file)){
+		fscanf(input_file," %d %d %d %d %d %d %d\n",&i,&x,&y,&q,&e,&l,&d);
+		printf("read current : i %d, x %d, y %d, DEMAND %d,  servStart %d, servEND %d, servTIME %d\n",i,x,y,q,e,l,d);
+	}
 	printf("CVRPTW - done\n");
 	fclose(input_file);
 	return 0;
