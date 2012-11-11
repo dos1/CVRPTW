@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
 #include <pthread.h>
 #include <math.h>
 #include <unistd.h>
+
+#include "main.h"
 
 bool processing = false;
 
@@ -13,16 +14,6 @@ void* timerThread(void *arg) {
 	processing = false;
 	return NULL;
 }
-
-struct customerlist{
-		int i; 		//number
-		int x,y; 	//coordinates
-		int q;		//demand
-		int e;		//ready time
-		int l;		//due date
-		int d;		//service time
-		struct customerlist* next;
-};
 
 void Push(struct customerlist** head_reference,int i, int x, int y, int q, int e, int l, int d){
 	struct customerlist* newcustomer = malloc(sizeof(struct customerlist));
