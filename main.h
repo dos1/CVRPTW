@@ -8,6 +8,7 @@ struct customerlist{
 		int e;		//ready time
 		int l;		//due date
 		int d;		//service time
+		double road0; //road to depot
 		struct customerlist* next;
 };
 

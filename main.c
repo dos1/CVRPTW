@@ -15,7 +15,7 @@ void* timerThread(void *arg) {
 	return NULL;
 }
 
-void Push(struct customerlist** head_reference,int i, int x, int y, int q, int e, int l, int d){
+void Push(struct customerlist** head_reference,int i, int x, int y, int q, int e, int l, int d, double road_to_depot){
 	struct customerlist* newcustomer = malloc(sizeof(struct customerlist));
 	newcustomer->i = i;
 	newcustomer->x = x;
@@ -24,6 +24,7 @@ void Push(struct customerlist** head_reference,int i, int x, int y, int q, int e
 	newcustomer->e = e;
 	newcustomer->l = l;
 	newcustomer->d = d;
+	newcustomer->road0 = road_to_depot;
 
 	newcustomer->next = *head_reference;
 	*head_reference = newcustomer;
@@ -82,7 +83,7 @@ int main(int argc, char** argv) {
 			printf("niedopuszczalne\n");
 			veh_count=-1;
 		}
-		Push(&head,i,x,y,q,e,l,d);
+		Push(&head,i,x,y,q,e,l,d,road);
 	}
 
 	fclose(input_file);
