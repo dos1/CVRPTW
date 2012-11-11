@@ -45,8 +45,8 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	pthread_t *timer;
-	if (pthread_create(timer, NULL, &timerThread, NULL) != 0) {
+	pthread_t timer;
+	if (pthread_create(&timer, NULL, &timerThread, NULL) != 0) {
 		printf("[WARNING] Could not create timer thread - processing time is not limited!");
 	}
 
