@@ -63,7 +63,6 @@ int main(int argc, char** argv) {
 	double road=0;
 	/* reading input file */
 	FILE *input_file=NULL;
-	char buf[1024];
 	input_file=fopen(argv[1],"r");
 	if (input_file==NULL) {
 		perror("Error opening input file ");
