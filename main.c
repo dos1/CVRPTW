@@ -128,7 +128,8 @@ int main(int argc, char** argv) {
 	//for(k=0;k<i;k++) printf ("%d - %p\n",ew_table[k].l,ew_table[k].customer);
 	
 	/*heuristics algoritm part, generating solution */
-	int prev_x=0,prev_y=0, cur_q=0,prev_road0=0;
+	int prev_x=0,prev_y=0, cur_q=0;
+	double prev_road0=0;
 	double road_next=0;	
 	pom=NULL;
 	//int ew_count=0; //iterating thingy for table of endwindows
@@ -150,8 +151,9 @@ int main(int argc, char** argv) {
 					prev_y=pom->y;
 					prev_road0=pom->road0;
 					cur_q-=pom->q;
-					if(road_next+cur_cost>(double)pom->e) cur_cost+= road_next + (double)pom->d;
-					else cur_cost=(double)(pom->e+pom->d);
+					if(road_next+cur_cost>(double)pom->e){
+						cur_cost+= road_next + (double)pom->d;
+					}else cur_cost=(double)(pom->e+pom->d);
 					//cur_cost+=(double)(( road_next+cur_cost>(double)pom->e ? road_next : pom->e) + pom->d);
 					printf("%d ",pom->i);//<- placeholder[[add to solution]] sol->i=pom->i;
 					if((pom->prev)!=NULL) (pom->prev)->next=pom->next;
@@ -163,7 +165,8 @@ int main(int argc, char** argv) {
 			}
 			k++;
 		}
-		printf("\n"); //until I do the correct solution saving
+		printf("\n");
+		//printf("-- %.5f --|-- %.5f \n",prev_road0,cur_cost); //until I do the correct solution saving
 		total_cost+=cur_cost+prev_road0-(double)e_0;
 	}
 
