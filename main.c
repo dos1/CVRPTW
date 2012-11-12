@@ -194,8 +194,12 @@ int main(int argc, char** argv) {
 					//cur_cost+=(double)(( road_next+cur_cost>(double)pom->e ? road_next : pom->e) + pom->d);
 					//printf("%d ",pom->i);//<- placeholder[[add to solution]] sol->i=pom->i;
 					track_append(&cur_track,pom->i);
-					if((pom->prev)!=NULL) (pom->prev)->next=pom->next;
-					if((pom->next)!=NULL) (pom->next)->prev=pom->prev;
+					if((pom->prev)!=NULL){ 
+						(pom->prev)->next=pom->next;
+					}else head=pom->next;
+					if((pom->next)!=NULL){ 
+						(pom->next)->prev=pom->prev;
+					}else tail=pom->prev;
 					if(pom->prev==NULL && pom->next==NULL) head=NULL;
 					free(pom);
 					ew_table[k].l=-1; //guarnatee of not visiting again
@@ -210,8 +214,39 @@ int main(int argc, char** argv) {
 	}
 
 
+		//<- there will be rewriting if exceded time
 
-	printf("veh %d total %.5f \nCVRPTW - done\n",veh_count, total_cost);
+	/* write solution to file */
+	FILE *output_file=NULL;
+	output_file=fopen(argv[2],"w");
+	if (output_file==NULL) {
+		perror("Error opening output file ");
+		return 1;
+	}	
+	fprintf(output_file,"%d %.5f\n",veh_count, total_cost);
+	
+	cur_track=NULL;
+	struct sol_list* cur_out=NULL;
+	struct track* last=NULL;
+	if(veh_count !=-1){
+		while(solution!=NULL){
+			cur_track=solution->start;
+			while(cur_track->next!=NULL){
+				last=cur_track;
+				cur_track=cur_track->next;
+
+				fprintf(output_file,"%d ",last->i);
+				free(last);
+			}
+			fprintf(output_file,"%d\n",cur_track->i);
+			free(cur_track);
+			cur_out=solution;
+			solution=solution->next;
+			free(cur_out);
+		}
+	}
+
+	fclose(output_file);
 	FreeList(&head);
 	return 0;
 }
