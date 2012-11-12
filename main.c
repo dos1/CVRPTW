@@ -214,7 +214,16 @@ int main(int argc, char** argv) {
 	}
 
 
-		//<- there will be rewriting if exceded time
+	if(!processing && head!=NULL){
+		cur_track=NULL;
+		pom=head;
+		head=head->next;
+
+		track_append(&cur_track,pom->i);
+		free(pom);
+
+		sol_list_append(&solution,cur_track);
+	}
 
 	/* write solution to file */
 	FILE *output_file=NULL;
