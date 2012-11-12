@@ -52,6 +52,40 @@ void customerlist_push_back(struct customerlist** head_reference,struct customer
 	if(*head_reference==NULL) *head_reference = newcustomer;
 }
 
+void sol_list_append(struct sol_list** headRef,struct track* begin){
+	struct sol_list* cur= *headRef;
+	
+	struct sol_list* pom = malloc(sizeof(struct sol_list));
+	pom->start=begin;
+	pom->next=NULL;
+
+	if(cur == NULL){
+		*headRef=pom;
+	}else{
+		while(cur->next != NULL){
+			cur=cur->next;
+		}
+		cur->next = pom;
+	}
+}
+
+void track_append(struct track** pointer, int i){
+	struct track* cur=*pointer;
+
+	struct track* node= malloc(sizeof(struct track));
+	node->i=i;
+	node->next=NULL;
+
+	if(cur == NULL){
+		*pointer=node;
+	}else{
+		while(cur->next !=NULL){
+			cur=cur->next;
+		}	
+		cur->next=node;
+	}
+}
+
 void FreeList(struct customerlist** head_reference){
 	struct customerlist* pom;
 	while(*head_reference!=NULL){
@@ -130,7 +164,9 @@ int main(int argc, char** argv) {
 	/*heuristics algoritm part, generating solution */
 	int prev_x=0,prev_y=0, cur_q=0;
 	double prev_road0=0;
-	double road_next=0;	
+	double road_next=0;
+	struct sol_list *solution=NULL;
+	struct track *cur_track=NULL;	
 	pom=NULL;
 	//int ew_count=0; //iterating thingy for table of endwindows
 	while(head!=NULL && processing && veh_count!=-1){
@@ -139,6 +175,7 @@ int main(int argc, char** argv) {
 		prev_y=y_0;
 		cur_q=Q;
 		cur_cost=(double)e_0;
+		cur_track=NULL;
 		//placeholder <-add new track to list of solutions
 		veh_count++;
 		while(k<i && cur_q>0 && processing){
@@ -155,7 +192,8 @@ int main(int argc, char** argv) {
 						cur_cost+= road_next + (double)pom->d;
 					}else cur_cost=(double)(pom->e+pom->d);
 					//cur_cost+=(double)(( road_next+cur_cost>(double)pom->e ? road_next : pom->e) + pom->d);
-					printf("%d ",pom->i);//<- placeholder[[add to solution]] sol->i=pom->i;
+					//printf("%d ",pom->i);//<- placeholder[[add to solution]] sol->i=pom->i;
+					track_append(&cur_track,pom->i);
 					if((pom->prev)!=NULL) (pom->prev)->next=pom->next;
 					if((pom->next)!=NULL) (pom->next)->prev=pom->prev;
 					if(pom->prev==NULL && pom->next==NULL) head=NULL;
@@ -165,10 +203,13 @@ int main(int argc, char** argv) {
 			}
 			k++;
 		}
-		printf("\n");
-		//printf("-- %.5f --|-- %.5f \n",prev_road0,cur_cost); //until I do the correct solution saving
+		//printf("\n");
+		sol_list_append(&solution,cur_track);
+	 	//until I do the correct solution saving
 		total_cost+=cur_cost+prev_road0-(double)e_0;
 	}
+
+
 
 	printf("veh %d total %.5f \nCVRPTW - done\n",veh_count, total_cost);
 	FreeList(&head);

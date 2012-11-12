@@ -19,7 +19,7 @@ struct track{ //list for single track
 };
 
 struct sol_list{ //list of tracks
-	struct track *head;
+	struct track *start;
 	struct sol_list *next;
 };
 
