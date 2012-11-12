@@ -10,6 +10,7 @@ struct customerlist{
 		int d;		//service time
 		double road0; //road to depot
 		struct customerlist* next;
+		struct customerlist* prev;
 };
 
 #endif // MAIN_H

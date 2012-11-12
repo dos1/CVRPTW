@@ -15,7 +15,7 @@ void* timerThread(void *arg) {
 	return NULL;
 }
 
-void Push(struct customerlist** head_reference,int i, int x, int y, int q, int e, int l, int d, double road_to_depot){
+void App_tail(struct customerlist** head_reference,struct customerlist ** tail_reference, int i, int x, int y, int q, int e, int l, int d, double road_to_depot){
 	struct customerlist* newcustomer = malloc(sizeof(struct customerlist));
 	newcustomer->i = i;
 	newcustomer->x = x;
@@ -26,8 +26,11 @@ void Push(struct customerlist** head_reference,int i, int x, int y, int q, int e
 	newcustomer->d = d;
 	newcustomer->road0 = road_to_depot;
 
-	newcustomer->next = *head_reference;
-	*head_reference = newcustomer;
+	newcustomer->next = NULL;
+	newcustomer->prev = *tail_reference;
+	if(*tail_reference!=NULL) (*tail_reference)->next=newcustomer;
+	*tail_reference = newcustomer;
+	if(*head_reference==NULL) *head_reference = newcustomer;
 }
 
 void FreeList(struct customerlist** head_reference){
@@ -53,7 +56,7 @@ int main(int argc, char** argv) {
 	int Q=0; //vehicle capacity
 	int x_0,y_0,e_0,l_0; //data for depot
 	int i=0,x=0,y=0,q=0,e=0,l=0,d=0; //data of current imput i-number; x,y-coordinates; q-demand; e-ready; l-due date; d-service time;
-	struct customerlist *head=NULL; //pointers
+	struct customerlist *head=NULL,*tail=NULL; //pointers
 
 	double cur_cost=0, total_cost=0; //current cost/length of track, combined costs of all tracks
 	int veh_count=0; // number of vehicles/tracks
@@ -83,7 +86,7 @@ int main(int argc, char** argv) {
 			printf("niedopuszczalne\n");
 			veh_count=-1;
 		}
-		Push(&head,i,x,y,q,e,l,d,road);
+		App_tail(&head,&tail,i,x,y,q,e,l,d,road);
 	}
 
 	fclose(input_file);
