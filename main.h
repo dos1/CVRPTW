@@ -13,4 +13,14 @@ struct customerlist{
 		struct customerlist* prev;
 };
 
+struct track{ //list for single track
+	int i;
+	struct track *next;
+};
+
+struct sol_list{ //list of tracks
+	struct track *head;
+	struct sol_list *next;
+};
+
 #endif // MAIN_H
