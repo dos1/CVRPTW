@@ -15,6 +15,25 @@ void* timerThread(void *arg) {
 	return NULL;
 }
 
+//selection sort
+void S_sort(struct endwindows tab[],int n)
+{
+    unsigned long int i, j, min; 
+	struct endwindows tmp;
+	for(i=0; i<n; i++)
+	{
+        min = i;
+		for(j=i+1; j<n; j++)
+		{
+            if(tab[j].l<tab[min].l) 
+                min = j;
+        }
+        tmp = tab[i];          
+        tab[i] = tab[min];
+        tab[min] = tmp;
+    }
+}
+
 void customerlist_push_back(struct customerlist** head_reference,struct customerlist ** tail_reference, int i, int x, int y, int q, int e, int l, int d, double road_to_depot){
 	struct customerlist* newcustomer = malloc(sizeof(struct customerlist));
 	newcustomer->i = i;
@@ -94,7 +113,7 @@ int main(int argc, char** argv) {
 	int k=0;
 	struct customerlist *pom=NULL;
 	pom=head;
-	struct endwindows *ew_table= calloc(i,sizeof(struct endwindows));
+	struct endwindows *ew_table=(struct endwindows*)calloc(i,sizeof(struct endwindows));
 	while(pom!=NULL){
 		ew_table[k].l=pom->l;
 		ew_table[k].customer=pom;
@@ -102,6 +121,10 @@ int main(int argc, char** argv) {
 		pom=pom->next;
 		k++;
 	}
+
+	S_sort(ew_table, i);
+
+	for(k=0;k<i;k++) printf ("%d \n",ew_table[k].l);
 	
 	printf("CVRPTW - done\n");
 	FreeList(&head);
