@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 	int Q=0; //vehicle capacity
 	int x_0,y_0,e_0,l_0; //data for depot
 	int i=0,x=0,y=0,q=0,e=0,l=0,d=0; //data of current imput i-number; x,y-coordinates; q-demand; e-ready; l-due date; d-service time;
-	struct customerlist *head=NULL,*tail=NULL; //pointers
+	struct customerlist *head=NULL,*tail=NULL; //pointers for customer list
 
 	double cur_cost=0, total_cost=0; //current cost/length of track, combined costs of all tracks
 	int veh_count=0; // number of vehicles/tracks
@@ -87,8 +87,22 @@ int main(int argc, char** argv) {
 		}
 		customerlist_push_back(&head,&tail,i,x,y,q,e,l,d,road);
 	}
-
 	fclose(input_file);
+
+	/* creating a additional table of struct endwindows */
+	//int n=i; //number of customers
+	int k=0;
+	struct customerlist *pom=NULL;
+	pom=head;
+	struct endwindows *ew_table= calloc(i,sizeof(struct endwindows));
+	while(pom!=NULL){
+		ew_table[k].l=pom->l;
+		ew_table[k].customer=pom;
+
+		pom=pom->next;
+		k++;
+	}
+	
 	printf("CVRPTW - done\n");
 	FreeList(&head);
 	return 0;

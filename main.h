@@ -23,4 +23,9 @@ struct sol_list{ //list of tracks
 	struct sol_list *next;
 };
 
+struct endwindows{
+	int l;
+	struct customerlist* customer;
+};
+
 #endif // MAIN_H
