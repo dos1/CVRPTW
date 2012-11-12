@@ -91,14 +91,14 @@ int main(int argc, char** argv) {
 	processing = true;
 
 	fscanf(input_file,"%*s VEHICLE NUMBER CAPACITY %*d %d",&Q); //whole while above can be done with fscanf in simmilar fasion to the one down
-	printf("Q %d\n",Q);
+	//printf("Q %d\n",Q);
 
 	fscanf(input_file," CUSTOMER\nCUST NO. XCOORD. YCOORD. DEMAND READY TIME DUE DATE SERVICE TIME 0 %d %d %*d %d %d %*d\n",&x_0,&y_0,&e_0,&l_0);
-	printf("read for depot : x %d, y %d,  servStart %d, servEND %d\n",x_0,y_0,e_0,l_0);
+	//printf("read for depot : x %d, y %d,  servStart %d, servEND %d\n",x_0,y_0,e_0,l_0);
 
 	while (!feof(input_file) && veh_count != -1) {
 		fscanf(input_file," %d %d %d %d %d %d %d\n",&i,&x,&y,&q,&e,&l,&d);
-		printf("read current : i %d, x %d, y %d, DEMAND %d,  servStart %d, servEND %d, servTIME %d\n",i,x,y,q,e,l,d);
+		//printf("read current : i %d, x %d, y %d, DEMAND %d,  servStart %d, servEND %d, servTIME %d\n",i,x,y,q,e,l,d);
 		road=sqrt((double)((x_0-x)*(x_0-x)+(y_0-y)*(y_0-y)));
 		if ((q>Q) || (road>l) || ((road > e ? road : e) + d + road) > l_0) {
 			printf("niedopuszczalne\n");
@@ -107,8 +107,8 @@ int main(int argc, char** argv) {
 		customerlist_push_back(&head,&tail,i,x,y,q,e,l,d,road);
 	}
 	fclose(input_file);
-
-	/* creating a additional table of struct endwindows */
+	//printf("%p \n",head);
+	/* creating a additional table of struct endwindows + sorting it */
 	//int n=i; //number of customers
 	int k=0;
 	struct customerlist *pom=NULL;
@@ -117,16 +117,54 @@ int main(int argc, char** argv) {
 	while(pom!=NULL){
 		ew_table[k].l=pom->l;
 		ew_table[k].customer=pom;
-
+		//printf("lol %p - %p\n",pom,ew_table[k].customer);
 		pom=pom->next;
 		k++;
 	}
 
 	S_sort(ew_table, i);
 
-	for(k=0;k<i;k++) printf ("%d \n",ew_table[k].l);
+
+	//for(k=0;k<i;k++) printf ("%d - %p\n",ew_table[k].l,ew_table[k].customer);
 	
-	printf("CVRPTW - done\n");
+	/*heuristics algoritm part, generating solution */
+	int prev_x=0,prev_y=0, cur_q=0;
+	double road_next=0;	
+	pom=NULL;
+	//int ew_count=0; //iterating thingy for table of endwindows
+	while(head!=NULL && processing && veh_count!=-1){
+		k=0;
+		prev_x=x_0;
+		prev_y=y_0;
+		cur_q=Q;
+		cur_cost=(double)e_0;
+		//placeholder <-add new track to list of solutions
+		veh_count++;
+		while(k<i && cur_q>0 && processing){
+			while(k<i && (double)ew_table[k].l<cur_cost) k++;
+			if(k<i){
+				pom=ew_table[k].customer; //printf("%d -- %d",pom,ew_table[k].customer); sleep(200);
+				road_next=sqrt((double)((prev_x-pom->x)*(prev_x-pom->x)+(prev_y-pom->y)*(prev_y-pom->y)));
+				if( (pom->q<=cur_q) && (road_next+cur_cost<=(double)(pom->l)) && (( road_next+cur_cost>pom->e ? road_next+cur_cost : pom->e) + pom->d + pom->road0 < l_0)){
+					prev_x=pom->x;
+					prev_y=pom->y;
+					cur_q-=pom->q;
+					cur_cost+=(double)(( road_next+cur_cost>(double)pom->e ? road_next+cur_cost : pom->e) + pom->d);
+					printf("%d ",pom->i);//<- placeholder[[add to solution]] sol->i=pom->i;
+					if((pom->prev)!=NULL) (pom->prev)->next=pom->next;
+					if((pom->next)!=NULL) (pom->next)->prev=pom->prev;
+					if(pom->prev==NULL && pom->next==NULL) head=NULL;
+					free(pom);
+					ew_table[k].l=-1; //guarnatee of not visiting again
+				}
+			}
+			k++;
+		}
+		printf("\n");
+		total_cost+=cur_cost-(double)e_0;
+	}
+
+	printf("veh %d total %.5f \nCVRPTW - done\n",veh_count, total_cost);
 	FreeList(&head);
 	return 0;
 }
