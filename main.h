@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-struct customerlist{
+struct customerlist {
 		int i; 		//number
 		int x,y; 	//coordinates
 		int q;		//demand
@@ -13,19 +13,19 @@ struct customerlist{
 		struct customerlist* prev;
 };
 
-struct track{ //list for single track
-	int i;
-	struct track *next;
+struct track { //list for single track
+		int i;
+		struct track *next;
 };
 
-struct sol_list{ //list of tracks
-	struct track *start;
-	struct sol_list *next;
+struct sol_list { //list of tracks
+		struct track *start;
+		struct sol_list *next;
 };
 
-struct endwindows{
-	int l;
-	struct customerlist* customer;
+struct endwindows {
+		int l;
+		struct customerlist* customer;
 };
 
 #endif // MAIN_H

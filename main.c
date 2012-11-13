@@ -16,25 +16,22 @@ void* timerThread(void *arg) {
 }
 
 //selection sort
-void S_sort(struct endwindows tab[],int n)
-{
-    unsigned long int i, j, min; 
+void S_sort(struct endwindows tab[],int n) {
+	unsigned long int i, j, min;
 	struct endwindows tmp;
-	for(i=0; i<n; i++)
-	{
-        min = i;
-		for(j=i+1; j<n; j++)
-		{
-            if(tab[j].l<tab[min].l) 
-                min = j;
-        }
-        tmp = tab[i];          
-        tab[i] = tab[min];
-        tab[min] = tmp;
-    }
+	for(i=0; i<n; i++) {
+		min = i;
+		for(j=i+1; j<n; j++) {
+			if(tab[j].l<tab[min].l)
+				min = j;
+		}
+		tmp = tab[i];
+		tab[i] = tab[min];
+		tab[min] = tmp;
+	}
 }
 
-void customerlist_push_back(struct customerlist** head_reference,struct customerlist ** tail_reference, int i, int x, int y, int q, int e, int l, int d, double road_to_depot){
+void customerlist_push_back(struct customerlist** head_reference,struct customerlist ** tail_reference, int i, int x, int y, int q, int e, int l, int d, double road_to_depot) {
 	struct customerlist* newcustomer = malloc(sizeof(struct customerlist));
 	newcustomer->i = i;
 	newcustomer->x = x;
@@ -47,48 +44,48 @@ void customerlist_push_back(struct customerlist** head_reference,struct customer
 
 	newcustomer->next = NULL;
 	newcustomer->prev = *tail_reference;
-	if(*tail_reference!=NULL) (*tail_reference)->next=newcustomer;
+	if (*tail_reference!=NULL) (*tail_reference)->next=newcustomer;
 	*tail_reference = newcustomer;
-	if(*head_reference==NULL) *head_reference = newcustomer;
+	if (*head_reference==NULL) *head_reference = newcustomer;
 }
 
-void sol_list_append(struct sol_list** headRef,struct track* begin){
+void sol_list_append(struct sol_list** headRef,struct track* begin) {
 	struct sol_list* cur= *headRef;
 	
 	struct sol_list* pom = malloc(sizeof(struct sol_list));
 	pom->start=begin;
 	pom->next=NULL;
 
-	if(cur == NULL){
+	if(cur == NULL) {
 		*headRef=pom;
-	}else{
-		while(cur->next != NULL){
+	} else {
+		while (cur->next != NULL) {
 			cur=cur->next;
 		}
 		cur->next = pom;
 	}
 }
 
-void track_append(struct track** pointer, int i){
+void track_append(struct track** pointer, int i) {
 	struct track* cur=*pointer;
 
 	struct track* node= malloc(sizeof(struct track));
 	node->i=i;
 	node->next=NULL;
 
-	if(cur == NULL){
+	if (cur == NULL) {
 		*pointer=node;
-	}else{
-		while(cur->next !=NULL){
+	} else {
+		while (cur->next !=NULL) {
 			cur=cur->next;
-		}	
+		}
 		cur->next=node;
 	}
 }
 
-void FreeList(struct customerlist** head_reference){
+void FreeList(struct customerlist** head_reference) {
 	struct customerlist* pom;
-	while(*head_reference!=NULL){
+	while (*head_reference!=NULL) {
 		pom=*head_reference;
 		*head_reference=(*head_reference)->next;
 		free(pom);
@@ -166,10 +163,10 @@ int main(int argc, char** argv) {
 	double prev_road0=0;
 	double road_next=0;
 	struct sol_list *solution=NULL;
-	struct track *cur_track=NULL;	
+	struct track *cur_track=NULL;
 	pom=NULL;
 	//int ew_count=0; //iterating thingy for table of endwindows
-	while(head!=NULL && processing && veh_count!=-1){
+	while (head!=NULL && processing && veh_count!=-1) {
 		k=0;
 		prev_x=x_0;
 		prev_y=y_0;
@@ -178,9 +175,9 @@ int main(int argc, char** argv) {
 		cur_track=NULL;
 		//placeholder <-add new track to list of solutions
 		veh_count++;
-		while(k<i && cur_q>0 && processing){
-			while(k<i && (double)ew_table[k].l<cur_cost) k++;
-			if(k<i){
+		while (k<i && cur_q>0 && processing) {
+			while (k<i && (double)ew_table[k].l<cur_cost) k++;
+			if (k<i) {
 				pom=ew_table[k].customer; //printf("%d -- %d",pom,ew_table[k].customer); sleep(200);
 				road_next=sqrt((double)((prev_x-pom->x)*(prev_x-pom->x)+(prev_y-pom->y)*(prev_y-pom->y)));
 				if( (pom->q<=cur_q) && (road_next+cur_cost<=(double)(pom->l)) && (( road_next+cur_cost>pom->e ? road_next+cur_cost : pom->e) + pom->d + pom->road0 < l_0)){
@@ -188,19 +185,19 @@ int main(int argc, char** argv) {
 					prev_y=pom->y;
 					prev_road0=pom->road0;
 					cur_q-=pom->q;
-					if(road_next+cur_cost>(double)pom->e){
+					if (road_next+cur_cost>(double)pom->e) {
 						cur_cost+= road_next + (double)pom->d;
-					}else cur_cost=(double)(pom->e+pom->d);
+					} else cur_cost=(double)(pom->e+pom->d);
 					//cur_cost+=(double)(( road_next+cur_cost>(double)pom->e ? road_next : pom->e) + pom->d);
 					//printf("%d ",pom->i);//<- placeholder[[add to solution]] sol->i=pom->i;
 					track_append(&cur_track,pom->i);
-					if((pom->prev)!=NULL){ 
+					if ((pom->prev)!=NULL) {
 						(pom->prev)->next=pom->next;
-					}else head=pom->next;
-					if((pom->next)!=NULL){ 
+					} else head=pom->next;
+					if ((pom->next)!=NULL) {
 						(pom->next)->prev=pom->prev;
-					}else tail=pom->prev;
-					if(pom->prev==NULL && pom->next==NULL) head=NULL;
+					} else tail=pom->prev;
+					if (pom->prev==NULL && pom->next==NULL) head=NULL;
 					free(pom);
 					ew_table[k].l=-1; //guarnatee of not visiting again
 				}
@@ -209,12 +206,12 @@ int main(int argc, char** argv) {
 		}
 		//printf("\n");
 		sol_list_append(&solution,cur_track);
-	 	//until I do the correct solution saving
+		//until I do the correct solution saving
 		total_cost+=cur_cost+prev_road0-(double)e_0;
 	}
 
 
-	if(!processing && head!=NULL){
+	if (!processing && head!=NULL){
 		cur_track=NULL;
 		pom=head;
 		head=head->next;
@@ -231,16 +228,16 @@ int main(int argc, char** argv) {
 	if (output_file==NULL) {
 		perror("Error opening output file ");
 		return 1;
-	}	
+	}
 	fprintf(output_file,"%d %.5f\n",veh_count, total_cost);
 	
 	cur_track=NULL;
 	struct sol_list* cur_out=NULL;
 	struct track* last=NULL;
-	if(veh_count !=-1){
-		while(solution!=NULL){
+	if (veh_count !=-1) {
+		while (solution!=NULL) {
 			cur_track=solution->start;
-			while(cur_track->next!=NULL){
+			while (cur_track->next!=NULL) {
 				last=cur_track;
 				cur_track=cur_track->next;
 
