@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <math.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 #include "main.h"
 
@@ -50,7 +51,7 @@ void customerlist_push_back(struct customerlist** head_reference,struct customer
 }
 
 void sol_list_append(struct sol_list** headRef,struct track* begin) {
-	struct sol_list* cur= *headRef;
+	struct sol_list* cur = *headRef;
 	
 	struct sol_list* pom = malloc(sizeof(struct sol_list));
 	pom->start=begin;
@@ -67,9 +68,9 @@ void sol_list_append(struct sol_list** headRef,struct track* begin) {
 }
 
 void track_append(struct track** pointer, int i) {
-	struct track* cur=*pointer;
+	struct track* cur = *pointer;
 
-	struct track* node= malloc(sizeof(struct track));
+	struct track* node = malloc(sizeof(struct track));
 	node->i=i;
 	node->next=NULL;
 
@@ -100,8 +101,11 @@ int main(int argc, char** argv) {
 
 	pthread_t timer;
 	if (pthread_create(&timer, NULL, &timerThread, NULL) != 0) {
-		printf("[WARNING] Could not create timer thread - processing time is not limited!");
+		printf("[WARNING] Could not create timer thread - processing time won't be limited!");
 	}
+
+	struct timeval time_start, time_end;
+	gettimeofday(&time_start, NULL);
 
 	int Q=0; //vehicle capacity
 	int x_0,y_0,e_0,l_0; //data for depot
@@ -132,7 +136,7 @@ int main(int argc, char** argv) {
 		//printf("read current : i %d, x %d, y %d, DEMAND %d,  servStart %d, servEND %d, servTIME %d\n",i,x,y,q,e,l,d);
 		road=sqrt((double)((x_0-x)*(x_0-x)+(y_0-y)*(y_0-y)));
 		if ((q>Q) || (road>l) || ((road > e ? road : e) + d + road) > l_0) {
-			printf("niedopuszczalne\n");
+			//printf("niedopuszczalne\n");
 			veh_count=-1;
 		}
 		customerlist_push_back(&head,&tail,i,x,y,q,e,l,d,road);
@@ -254,5 +258,16 @@ int main(int argc, char** argv) {
 
 	fclose(output_file);
 	FreeList(&head);
+
+	gettimeofday(&time_end, NULL);
+	time_t secs = time_end.tv_sec - time_start.tv_sec;
+	suseconds_t usecs;
+		if (time_end.tv_usec < time_start.tv_usec) {
+		secs -= 1;
+		usecs = time_start.tv_usec - time_end.tv_usec;
+	} else {
+		usecs = time_end.tv_usec - time_start.tv_usec;
+	}
+	printf("%d.%.6d", (int)secs, (int)usecs);
 	return 0;
 }
