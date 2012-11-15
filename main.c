@@ -220,6 +220,7 @@ int main(int argc, char** argv) {
 		pom=head;
 		head=head->next;
 
+		total_cost+= ( pom->road0 > pom->e ? pom->road0 : pom->e) + pom->d + pom->road0; 
 		track_append(&cur_track,pom->i);
 		free(pom);
 
