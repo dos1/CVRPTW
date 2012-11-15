@@ -11,5 +11,5 @@ mkfifo .tmpinc
 echo -e "Seq\t\tTime\t\tRoutes\t\tCost"
 for i in `seq $4 $5`; do
   cat $2 | head -n $((9+$i)) > .tmpinc &
-  $1 .tmpinc $3/output$i.txt | tail -n +2 | awk -v i=$i '{ printf "%d\t\t%s\n", i, $0 }'
+  $1 .tmpinc $3/output$i.txt | tail -n +3 | awk -v i=$i '{ printf "%d\t\t%s\n", i, $0 }'
 done
