@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ "$#" -lt 5 ]; then
-  echo "Usage: $0 path-to-binary input-file output-dir from to"
+  echo "Usage: $0 path-to-binary input-file output-dir from to [increment]"
   exit 0
 fi
 if [ -e .tmpinc ]; then
@@ -9,7 +9,13 @@ fi
 mkfifo .tmpinc
 
 echo -e "Seq\t\tTime\t\tRoutes\t\tCost"
-for i in `seq $4 $5`; do
+
+if [ "x$6" == "x" ]; then
+  SEQ=`seq $4 $5`
+else
+  SEQ=`seq $4 $6 $5`
+fi
+for i in $SEQ; do
   cat $2 | head -n $((9+$i)) > .tmpinc &
   $1 .tmpinc $3/output$i.txt | tail -n +3 | awk -v i=$i '{ printf "%d\t\t%s\n", i, $0 }'
 done
