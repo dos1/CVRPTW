@@ -269,6 +269,7 @@ int main(int argc, char** argv) {
 	} else {
 		usecs = time_end.tv_usec - time_start.tv_usec;
 	}
+	printf("%s\n",argv[1]);
 	printf("Time\t\tRoutes\t\tCost\n");
 	printf("%d.%.6d\t%d\t\t%.5f\n", (int)secs, (int)usecs, veh_count, total_cost);
 	return 0;
