@@ -1,4 +1,6 @@
 #!/bin/bash
+#Runs all tests from specified directory.
+
 if [ "$#" -lt 3 ]; then
   echo "Usage: $0 path-to-binary input-directory output-directory"
   exit 0

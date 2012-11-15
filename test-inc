@@ -1,4 +1,6 @@
 #!/bin/bash
+#Runs specified test many times, incrementing number of vertices in it.
+
 if [ "$#" -lt 5 ]; then
   echo "Usage: $0 path-to-binary input-file output-dir from to [increment]"
   exit 0
