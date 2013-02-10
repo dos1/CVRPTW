@@ -14,7 +14,8 @@ struct customerlist {
 };
 
 struct track { //list for single track
-		int i;
+		struct customerlist* customer;
+		float cur_cost;
 		struct track *next;
 };
 
@@ -26,6 +27,11 @@ struct sol_list { //list of tracks
 struct endwindows {
 		int l;
 		struct customerlist* customer;
+};
+
+struct tabu {
+		int pos1, pos2;
+		struct tabu* next;
 };
 
 #endif // MAIN_H
